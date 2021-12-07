@@ -7,6 +7,7 @@ from itertools import permutations
 from tqdm import tqdm
 from Task import Task
 import math
+import threading
 
 def solve(tasks):
     """
@@ -163,9 +164,9 @@ if __name__ == '__main__':
     #               number=10))
     # print(timeit.repeat("dpSolutionTaskCopies(test_tasks)", "from __main__ import dpSolutionTaskCopies, test_tasks",
     #               number=10))
-    for input_path in tqdm(list(Path('inputs/').rglob("*"))):
+    def solve_prob_thread(input_path):
         if not (input_path).is_file() or ".in" not in input_path.name:
-            continue
+            return
         output_path2 = Path('outputs') / (input_path.name[:-3] + '.out')
         tasks = read_input_file(input_path)
         print(input_path)
@@ -177,3 +178,7 @@ if __name__ == '__main__':
         if "small" in output_path2.name:
             output_path = Path('outputs/small') / (input_path.name[:-3] + '.out')
         write_output_file(output_path, output)
+    
+    for input_path in tqdm(list(Path('inputs/').rglob("*"))):
+        threading.Thread(target=lambda: solve_prob_thread(input_path)).start()
+
