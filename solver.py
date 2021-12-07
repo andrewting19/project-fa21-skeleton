@@ -27,7 +27,7 @@ def dpSolutionTaskCopies(tasks):
     root = dict()
     for task in tasks:
         root[task] = task
-        granularity = 100
+        granularity = 1000
         for alpha in [i/granularity for i in range(1, granularity, 1)]:
             new_benefit = round(alpha*task.perfect_benefit)
             time_delay = round(abs(math.log(alpha)) / 0.0170)
@@ -89,7 +89,7 @@ def dpSolutionTaskCopiesMemoized(tasks):
     root = dict()
     for task in tasks:
         root[task] = task
-        granularity = 100
+        granularity = 1000
         for alpha in [i/granularity for i in range(1, granularity, 1)]:
             new_benefit = round(alpha*task.perfect_benefit)
             time_delay = round(abs(math.log(alpha)) / 0.0170)
@@ -136,16 +136,16 @@ def dpSolutionTaskCopiesMemoized(tasks):
     print(bestAnswer)
     return res
 
-count = 0
+# count = 0
 
-test_tasks = [
-    Task(1, 20, 11, 5),
-    Task(2, 21, 15, 10)
-]
+# test_tasks = [
+#     Task(1, 20, 11, 5),
+#     Task(2, 21, 15, 10)
+# ]
 
 # print(dpSolution3(test_tasks))
 # print(dpSolutionTaskCopies(test_tasks))
-
+a = list(Path('inputs/medium/').rglob("*"))
 
 # Here's an example of how to run your solver.
 if __name__ == '__main__':
@@ -164,9 +164,28 @@ if __name__ == '__main__':
     #               number=10))
     # print(timeit.repeat("dpSolutionTaskCopies(test_tasks)", "from __main__ import dpSolutionTaskCopies, test_tasks",
     #               number=10))
-    def solve_prob_thread(input_path):
+    # def solve_prob_thread(input_path):
+    #     if not (input_path).is_file() or ".in" not in input_path.name:
+    #         return
+    #     output_path2 = Path('outputs') / (input_path.name[:-3] + '.out')
+    #     tasks = read_input_file(input_path)
+    #     print(input_path)
+    #     output = solve(tasks)
+    #     if "large" in output_path2.name:
+    #         output_path = Path('outputs/large') / (input_path.name[:-3] + '.out')
+    #     if "medium" in output_path2.name:
+    #         output_path = Path('outputs/medium') / (input_path.name[:-3] + '.out')
+    #     if "small" in output_path2.name:
+    #         output_path = Path('outputs/small') / (input_path.name[:-3] + '.out')
+    #     write_output_file(output_path, output)
+    a = list(Path('inputs/medium/').rglob("*"))
+    a = a[len(a)//2:]
+    a, b = a[0:len(a)//2], a[len(a)//2:]
+    for input_path in tqdm(b):
+    # for input_path in tqdm(list(reversed(a))): #tqdm(list(Path('inputs/small/').rglob("*"))):
+        # threading.Thread(target=lambda: solve_prob_thread(input_path)).start()
         if not (input_path).is_file() or ".in" not in input_path.name:
-            return
+            continue
         output_path2 = Path('outputs') / (input_path.name[:-3] + '.out')
         tasks = read_input_file(input_path)
         print(input_path)
@@ -178,7 +197,4 @@ if __name__ == '__main__':
         if "small" in output_path2.name:
             output_path = Path('outputs/small') / (input_path.name[:-3] + '.out')
         write_output_file(output_path, output)
-    
-    for input_path in tqdm(list(Path('inputs/').rglob("*"))):
-        threading.Thread(target=lambda: solve_prob_thread(input_path)).start()
 
